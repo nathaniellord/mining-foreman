@@ -12,7 +12,7 @@ const port = process.env.PORT || 3050;
 const miners = new Miners();
 miners.downloadMiners();
 
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 // Initialize the cors rules
 new Cors(app);

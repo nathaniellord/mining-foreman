@@ -1,4 +1,4 @@
-import { GPUtils } from '../../gpus';
+import { GPUtils } from '../../gpus/gpus';
 
 export class GpuController {
 
