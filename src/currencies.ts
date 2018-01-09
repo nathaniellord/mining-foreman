@@ -1,13 +1,14 @@
 import * as request from 'request';
 
 const currencies = [
-  { name: 'Ethereum', algorithm: 'eth', symbol: 'ETH' },
+  { name: 'Ethereum', algorithm: 'ethash', symbol: 'ETH' },
   { name: 'Dash', algorithm: 'x11', symbol: 'DSH' },
-  { name: 'NEM', algorithm: 'eth', symbol: 'XEM' },
-  { name: 'Ethereum Classic', algorithm: 'eth', symbol: 'ETC' },
+  { name: 'NEM', algorithm: 'ethash', symbol: 'XEM' },
+  { name: 'Ethereum Classic', algorithm: 'ethash', symbol: 'ETC' },
   { name: 'Monero', algorithm: 'cryptonight', symbol: 'XMR' },
   { name: 'Zcash', algorithm: 'equihash', symbol: 'ZEC' },
-  { name: 'Electroneum', algorithm: 'cryptonight', symbol: 'ETN' }
+  { name: 'Electroneum', algorithm: 'cryptonight', symbol: 'ETN' },
+  { name: 'Sumokoin', algorithm: 'cryptonight', symbol: 'SUMO' }
 ];
 
 export class Currencies {

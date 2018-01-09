@@ -57,7 +57,17 @@ export class WindowsGPUs {
       const gpu = {};
       valuesArray.forEach(entry => gpu[entry[0]] = entry[index]);
       return gpu;
-    })
+    }).map(gpu => { gpu['platform'] = gpu['AdapterCompatibility']; gpu['device'] = gpu['VideoProcessor'].replace(/ /g, ''); return gpu });
+    const unique = [...new Set(GPUs.map(item => item['device']))];
+    unique.forEach(value => {
+      let id = 1;
+      GPUs.forEach(gpu => {
+        if (gpu['device'] === value) {
+          gpu['device'] += '#' + id;
+          id++;
+        }
+      });
+    });
     return GPUs;
   }
 

@@ -3,14 +3,16 @@ import * as bodyParser from 'body-parser';
 
 import { Cors } from './cors';
 import { Routes } from './api/routes/routes';
+import { state } from './state';
 
 import { Miners } from './miners';
 
 const app = express();
 const port = process.env.PORT || 3050;
 
+state.initialize();
 const miners = new Miners();
-miners.downloadMiners();
+miners.setup();
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());

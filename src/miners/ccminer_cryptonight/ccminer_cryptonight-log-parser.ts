@@ -1,11 +1,14 @@
-
 const DateBracketsRegex = /\[(.*?)\]/;
 const MessageFormats = [
   { type: 'GPU', regex: /GPU #(\d+): (.*), (.*)(\(.*\))?/ },
   { type: 'Stratum', regex: /Stratum detected new block/ },
   { type: 'Diff', regex: /Pool set diff to (.+)/ },
   { type: 'Accepted', regex: /accepted: (\d+)\/(\d+) \((\d+\.\d+)%\), (\d+\.\d+) (.+) \(yay!!!\)/ },
-  { type: 'UsingConnector', regex: /Using (.+)/ }
+  { type: 'UsingConnector', regex: /Using (.+)/ },
+  { type: 'StratumStart', regex: /Starting Stratum on (.*)/ },
+  { type: 'ThreadsStarted', regex: /(\d+) miner threads started, using '(.*)' algorithm/ },
+  { type: 'ConnectionInterrupted', regex: /Stratum connection interrupted/ },
+  { type: 'ConnectionTimedOut', regex: /Stratum connection timed out/ }
 ]
 
 interface LogEntry {
@@ -36,6 +39,16 @@ export class LogParser {
     } else if (message.match(this.getRegex('UsingConnector'))) {
       entry.type = 'UsingConnector';
       entry.data = this.processUsingConnectorMessage(message);
+    } else if (message.match(this.getRegex('StratumStart'))) {
+      entry.type = 'StratumStart';
+      entry.data = this.processStratumStartMessage(message);
+    } else if (message.match(this.getRegex('ThreadsStarted'))) {
+      entry.type = 'ThreadsStarted';
+      entry.data = this.processThreadsStartedMessage(message);
+    } else if (message.match(this.getRegex('ConnectionInterrupted'))) {
+      entry.type = 'ConnectionInterrupted';
+    } else if (message.match(this.getRegex('ConnectionTimedOut'))) {
+      entry.type = 'ConnectionTimedOut';
     } else {
       entry.type = 'Unknown';
       entry.data = { message: message };
@@ -55,6 +68,23 @@ export class LogParser {
       name: parts[2],
       speed: parts[3],
       average: parts[4]
+    }
+    return data;
+  }
+
+  private processThreadsStartedMessage(message) {
+    const parts = message.match(this.getRegex('ThreadsStarted'));
+    const data = {
+      threads: parts[1],
+      algorithm: parts[2]
+    }
+    return data;
+  }
+
+  private processStratumStartMessage(message) {
+    const parts = message.match(this.getRegex('StratumStart'));
+    const data = {
+      stratum: parts[1]
     }
     return data;
   }
