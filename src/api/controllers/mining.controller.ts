@@ -1,9 +1,12 @@
 import { Miners } from '../../miners';
+import { state } from '../../state';
 
 export class MiningController {
 
   public getMiningStatus(req, res) {
-    res.json({ status: true })
+    state.getMiners().then(miners => {
+      res.json({ miners: miners.map(value => value.info) });
+    });
   }
 
   public startMining(req, res) {

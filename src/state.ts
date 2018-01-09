@@ -25,5 +25,9 @@ class State {
     this.miners.push(miner);
   }
 
+  public async removeMiner(miner) {
+    return;
+  }
+
 }
 export let state = new State();

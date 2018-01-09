@@ -2,6 +2,7 @@ import * as child_process from 'child_process';
 import { LogParser } from './ccminer-log-parser';
 import { Utils } from '../../utils';
 import * as path from 'path';
+import { EventEmitter } from 'events';
 const spawn = child_process.spawn;
 const exec = child_process.exec;
 const logParser = new LogParser;
@@ -12,6 +13,7 @@ export class CCMiner {
 
   utils = new Utils();
   script;
+  log = new EventEmitter();
 
   start(pool, gpus) {
     const config = { pool: pool.url, user: pool.user, password: pool.password };
@@ -24,6 +26,7 @@ export class CCMiner {
       } else {
         console.log(entry);
       }
+      this.log.emit(entry.type, entry);
     });
     this.script.on('error', err => {
       console.error(err);
@@ -36,6 +39,7 @@ export class CCMiner {
       } else {
         console.log(entry);
       }
+      this.log.emit(entry.type, entry);
     });
     this.script.on('close', code => console.log(`Exited miner with code ${code}`));
     process.on('exit', function () {
