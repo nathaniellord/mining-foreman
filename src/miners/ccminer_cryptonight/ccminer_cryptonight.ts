@@ -15,10 +15,9 @@ export class CCCryptonightMiner {
   script;
   log = new EventEmitter();
 
-
   start(pool, gpus) {
     const config = { pool: pool.url, user: pool.user, password: pool.password, gpus: gpus };
-    this.script = this.startMiner(config);
+    this.startMiner(config);
     this.script.stderr.setEncoding('utf8');
     this.script.stderr.on('data', (data: string) => {
       const entry = logParser.parseLog(data);
@@ -49,18 +48,19 @@ export class CCCryptonightMiner {
   }
 
   stop() {
-    this.script.kill();
+    console.log('Signalling the process to terminate');
+    this.script.kill('SIGKILL');
   }
 
   private startMiner(config) {
     if (this.utils.getOS() === 'win32') {
-      console.log(this.generateWindowsCommand(config));
-      return exec(this.generateWindowsCommand(config));
+      this.script = exec(this.generateWindowsCommand(config));
     } else if (this.utils.getOS() === 'linux') {
-      return spawn(ccminerLocation, this.generateLinuxCommand(config));
+      this.script = spawn(ccminerLocation, this.generateLinuxCommand(config));
     } else if (this.utils.getOS() === 'darwin') {
-      return spawn(ccminerLocation, this.generateLinuxCommand(config));
+      this.script = spawn(ccminerLocation, this.generateLinuxCommand(config));
     }
+    return this.script;
   }
 
   private generateWindowsCommand(config) {

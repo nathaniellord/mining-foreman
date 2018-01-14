@@ -1,3 +1,4 @@
+import * as crypto from 'crypto';
 import { CCMiner } from './ccminer/ccminer';
 import { CCCryptonightMiner } from './ccminer_cryptonight/ccminer_cryptonight';
 import { SGMiner } from './sgminer/sgminer';
@@ -9,7 +10,9 @@ export class Miner {
   private name;
   private gpus;
   private pool;
+  private started;
   public info;
+  public id;
 
   constructor() {
 
@@ -19,16 +22,21 @@ export class Miner {
     this.name = minerName;
     this.gpus = gpus;
     this.pool = pool;
+    this.started = new Date();
+    this.id = crypto.createHash('md5').update(this.started + this.pool + this.name + JSON.stringify(gpus.map(value => value.device))).digest('hex');
     this.info = {
+      id: this.id,
       name: minerName,
       pool: pool.url,
+      currency: pool.currency,
       gpus: gpus.map(value => value.device),
       hashrate: 0,
       lastaccepted: undefined,
       accepted: 0,
       rejected: 0,
       threads: 0,
-      difficulty: 0
+      difficulty: 0,
+      started: this.started
     };
     this.miner = this.getMinerInstance(minerName);
     this.initializeLogHandler();
@@ -36,6 +44,7 @@ export class Miner {
   }
 
   public stop() {
+    console.log('Signalling the internal miner to stop.');
     this.miner.stop();
   }
 

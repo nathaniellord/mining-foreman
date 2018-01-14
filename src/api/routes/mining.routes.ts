@@ -5,5 +5,7 @@ const MiningRoutes = function (app) {
     .get(miningController.getMiningStatus);
   app.route('/mining/miner')
     .post(miningController.startMining);
+  app.route('/mining/miner/:miner')
+    .delete(miningController.stopMining)
 }
 export { MiningRoutes };

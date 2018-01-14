@@ -106,6 +106,13 @@ export class Miners {
     return;
   }
 
+  public async stopMiner(minerId) {
+    const activeMiner = state.miners.filter(miner => miner.id === minerId)[0];
+    console.log('Signalling the miner to stop.');
+    activeMiner.stop();
+    state.miners = state.miners.filter(value => value.id !== minerId);
+  }
+
   public getCompatibleMiner(algorithm, platform) {
     const miners = new Miners().getMiners();
     return miners.filter(m => m.algorithms.includes(algorithm) && m.platform.includes(platform));

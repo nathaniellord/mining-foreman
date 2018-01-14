@@ -18,4 +18,11 @@ export class MiningController {
     res.json({ started: true });
   }
 
+  public stopMining(req, res) {
+    const minerId = req.params.miner;
+    const miner = new Miners();
+    miner.stopMiner(minerId);
+    res.json({ stopped: true });
+  }
+
 }
